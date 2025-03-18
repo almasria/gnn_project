@@ -1,2 +1,5 @@
 .venv
 temp.ipynb
+gnn_project_env
+model/__pycache__
+/__pycache__
