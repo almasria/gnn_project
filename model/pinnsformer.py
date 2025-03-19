@@ -120,3 +120,39 @@ class PINNsformer(nn.Module):
         # pdb.set_trace()
         # raise Exception('stop')
         return output
+
+
+class PINNsformer_params(nn.Module):
+    def __init__(self, d_out, d_model, d_hidden, N, heads):
+        """
+        Adapted PINNsformer that takes three inputs: x, t, and rho.
+        Args:
+            d_out (int): Output dimension.
+            d_model (int): Dimension of the model embeddings.
+            d_hidden (int): Hidden layer dimension in the output MLP.
+            N (int): Number of encoder/decoder layers.
+            heads (int): Number of attention heads.
+        """
+        super(PINNsformer_params, self).__init__()
+        # Change input dimension from 2 to 3 to accommodate x, t, and rho
+        self.linear_emb = nn.Linear(3, d_model)
+
+        self.encoder = Encoder(d_model, N, heads)
+        self.decoder = Decoder(d_model, N, heads)
+        self.linear_out = nn.Sequential(
+            nn.Linear(d_model, d_hidden),
+            WaveAct(),
+            nn.Linear(d_hidden, d_hidden),
+            WaveAct(),
+            nn.Linear(d_hidden, d_out)
+        )
+
+    def forward(self, x, t, rho):
+        # Concatenate x, t, and rho along the last dimension
+        src = torch.cat((x, t, rho), dim=-1)
+        src = self.linear_emb(src)
+
+        e_outputs = self.encoder(src)
+        d_output = self.decoder(src, e_outputs)
+        output = self.linear_out(d_output)
+        return output
