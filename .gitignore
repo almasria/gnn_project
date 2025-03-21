@@ -4,3 +4,4 @@ gnn_project_env
 model/__pycache__
 /__pycache__
 demo/1d_reaction/wandb
+transfer_learning/demo_training_loops/wandb
