@@ -1,4 +1,5 @@
 ### ADJUSTED for transfer learning experiments!!! additional input for equation parameter added ###
+### Also different activation function inputs enabled
 
 # baseline implementation of First Layer Sine
 # paper: Learning in Sinusoidal Spaces with Physics-Informed Neural Networks
@@ -16,8 +17,8 @@ class SinAct(nn.Module):
         return torch.sin(x)
 
     
-class FLS_params(nn.Module):
-    def __init__(self, in_dim, hidden_dim, out_dim, num_layer, act_fn="tanh"):
+class PINNff(nn.Module):
+    def __init__(self, in_dim, hidden_dim, out_dim, num_layer, init_act_func, subseq_activ_func):
         """
         FLS model with SinAct activation in the first layer and Tanh in subsequent layers.
         
@@ -27,21 +28,30 @@ class FLS_params(nn.Module):
             out_dim (int): Output dimension (e.g., 1 for scalar output).
             num_layer (int): Total number of layers in the network.
         """
-        super(FLS_params, self).__init__()
+        super(PINNff, self).__init__()
 
-        if act_fn == "tanh":
-            subsequent_activation = nn.Tanh()
-        elif act_fn == "gelu":
-            subsequent_activation = nn.GELU()
+        _activ_func_mapping = {"tanh": nn.Tanh(), "gelu": nn.GELU(), "sin": SinAct()}
+
+        if init_act_func in _activ_func_mapping.keys():
+            initial_activation = _activ_func_mapping[init_act_func]
+        else: 
+            raise ValueError(f"Invalid init_act_fn '{init_act_func}'. Must be one of {list(_activ_func_mapping.keys())}.")
+
+        if subseq_activ_func in ["tanh", "gelu"]:
+            subseq_activation = _activ_func_mapping[subseq_activ_func]
+        else:
+            raise ValueError(f"Invalid subseq_activ_func '{subseq_activ_func}'. Must be one of {["tanh", "gelu"]}")
+            
+       
 
         layers = []
         for i in range(num_layer - 1):
             if i == 0:
                 layers.append(nn.Linear(in_features=in_dim, out_features=hidden_dim))
-                layers.append(SinAct())  # First layer uses SinAct
+                layers.append(initial_activation)  # First layer uses SinAct
             else:
                 layers.append(nn.Linear(in_features=hidden_dim, out_features=hidden_dim))
-                layers.append(subsequent_activation)  # Subsequent layers use Tanh
+                layers.append(subseq_activation)  # Subsequent layers use Tanh
 
         layers.append(nn.Linear(in_features=hidden_dim, out_features=out_dim))  # Final layer
 

@@ -6,3 +6,5 @@ model_parametrized/__pycache__
 /__pycache__
 demo/1d_reaction/wandb
 transfer_learning/demo_training_loops/wandb
+transfer_learning/1d_logistic_ode/wandb
+transfer_learning/1d_logistic_ode/__pycache__
