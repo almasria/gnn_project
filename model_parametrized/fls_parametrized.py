@@ -17,7 +17,7 @@ class SinAct(nn.Module):
 
     
 class FLS_params(nn.Module):
-    def __init__(self, in_dim, hidden_dim, out_dim, num_layer):
+    def __init__(self, in_dim, hidden_dim, out_dim, num_layer, act_fn="tanh"):
         """
         FLS model with SinAct activation in the first layer and Tanh in subsequent layers.
         
@@ -29,6 +29,11 @@ class FLS_params(nn.Module):
         """
         super(FLS_params, self).__init__()
 
+        if act_fn == "tanh":
+            subsequent_activation = nn.Tanh()
+        elif act_fn == "gelu":
+            subsequent_activation = nn.GELU()
+
         layers = []
         for i in range(num_layer - 1):
             if i == 0:
@@ -36,7 +41,7 @@ class FLS_params(nn.Module):
                 layers.append(SinAct())  # First layer uses SinAct
             else:
                 layers.append(nn.Linear(in_features=hidden_dim, out_features=hidden_dim))
-                layers.append(nn.Tanh())  # Subsequent layers use Tanh
+                layers.append(subsequent_activation)  # Subsequent layers use Tanh
 
         layers.append(nn.Linear(in_features=hidden_dim, out_features=out_dim))  # Final layer
 
