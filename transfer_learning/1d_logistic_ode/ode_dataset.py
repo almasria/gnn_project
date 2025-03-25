@@ -120,4 +120,15 @@ class ODEData(Dataset):
         Returns:
             x, t, rho tensor.
         """
-        return self.get_interior_points(rho)
+        return self.get_interior_points(rho) 
+    
+    def get_interior_input_without_points(self):
+
+        res, i_ = self._generate_data()
+        res_tensor = torch.tensor(res, dtype=torch.float32, requires_grad=True).to(self.device)
+            
+        x = res_tensor[:, 0:1]
+        t = res_tensor[:, 1:2]
+
+        return x, t, None
+        
