@@ -95,7 +95,7 @@ class Decoder(nn.Module):
         return self.act(x)
 
 
-class PINNsformer_params(nn.Module):
+class PINNsformer(nn.Module):
     def __init__(self, d_out, d_model, d_hidden, N, heads):
         """
         Adapted PINNsformer that takes three inputs: x, t, and rho.
@@ -106,7 +106,7 @@ class PINNsformer_params(nn.Module):
             N (int): Number of encoder/decoder layers.
             heads (int): Number of attention heads.
         """
-        super(PINNsformer_params, self).__init__()
+        super(PINNsformer, self).__init__()
         # Change input dimension from 2 to 3 to accommodate x, t, and rho
         self.linear_emb = nn.Linear(3, d_model)
 

@@ -19,6 +19,10 @@ class HyperparamConfig:
     init_activ_func: Optional[str] = None  # Only relevant for "pinn_ff"       # sin , tanh, gelu
     subseq_activ_func: Optional[str] = None  # Only relevant for "pinn_ff"     # tanh, gelu
 
+    # Only relevant if model_name is "pinnsformer"
+    emb_dim: Optional[int] = field(default=None) 
+    num_heads: Optional[int] = field(default=None)
+
     # Optimizer parameters
     optimizer: str = "adam"  # Options: "adam", "lbfgs"
     learning_rate: Optional[float] = field(default=None)  # Only relevant for Adam
@@ -60,6 +64,13 @@ class HyperparamConfig:
                 raise ValueError("`init_activ_func` must be specified when model_name is 'pinn_ff'.")
             if self.subseq_activ_func is None:
                 raise ValueError("`subseq_activ_func` must be specified when model_name is 'pinn_ff'.")
+            
+        if self.model_name == "pinnsformer":
+            if self.emb_dim is None:
+                raise ValueError("`emb_dim` must be specified when model_name is 'pinnsformer'.")
+            if self.num_heads is None:
+                raise ValueError("`num_heads` must be specified when model_name is 'pinnsformer'.")
+
 
         # Validate normalization-specific parameters
         if self.normalize_res or self.normalize_ic:
