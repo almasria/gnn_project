@@ -34,6 +34,10 @@ class HyperparamConfig:
     alpha: Optional[float] = None  # Only relevant if normalize_res or normalize_ic is True
     epsilon: Optional[float] = None  # Only relevant if normalize_res or normalize_ic is True
 
+    # Adaptive loss weighting 
+    adaptive_loss_weighting: bool = False 
+    adaptive_loss_coeff: Optional[float] = field(default=None)  
+
     def validate(self):
         """
         Validate the configuration to ensure all conditional parameters are set correctly.
