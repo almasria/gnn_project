@@ -138,6 +138,7 @@ class PDEData(Dataset):
         return (self.data[rho]['u_left'], self.data[rho]['u_right'], 
                 self.data[rho]['u_upper'], self.data[rho]['u_lower'])
     
+    
     def get_test_points(self, rho):
         """
         Get the test points (res_test) and their spatial and temporal components for a specific rho.
