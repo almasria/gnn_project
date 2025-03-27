@@ -3,14 +3,14 @@ from torch.utils.data import Dataset
 import numpy as np
 
 
-class ODEData(Dataset):
+class PDEData(Dataset):
     def __init__(self, t_range, beta_values, t_points, constant_x, device='cuda:0'):
         """
-        Initialize the dataset for a logistic growth ODE with a constant spatial coordinate.
+        Initialize the dataset for a logistic growth PDE with a constant spatial coordinate.
 
         Args:
             t_range (list): Time domain [t_min, t_max].
-            beta_values (list): List of reaction coefficients (? values).
+            beta_values (list): List of convection coefficients (? values).
             t_points (int): Number of time points.
             constant_x (float): The constant spatial coordinate (e.g., a representative location).
             device (str): Device to store the tensors ('cpu' or 'cuda:0').
@@ -62,25 +62,21 @@ class ODEData(Dataset):
 
     def analytical_solution(self, x, t, beta):
         """
-        Compute the analytical solution for the logistic growth ODE.
+        Compute the analytical solution for the logistic growth pde.
         Here we use the same functional form as before:
         
-        u(t) = h(x) * exp(? t) / (h(x) * exp(? t) + 1 - h(x)),  with
-        h(x) = exp( - (x - ?)? / [2*(?/4)?] ).
-        
-        Note: Since x is constant, h(x) is also constant.
+        u_analytical = sin(x - beta * t)        
 
         Args:
             x (torch.Tensor): The spatial input (constant value).
             t (torch.Tensor): Time input.
-            beta (float): Reaction coefficient.
+            beta (float): Convection coefficient.
             
         Returns:
             torch.Tensor: The analytical solution.
         """
-        pi = torch.tensor(np.pi, dtype=torch.float32, device=self.device)
-        h = torch.exp(- (x - pi)**2 / (2 * (pi / 4)**2))
-        return h * torch.exp(beta * t) / (h * torch.exp(beta * t) + 1 - h)
+ 
+        return torch.sin(x - beta * t)
 
     def get_interior_points(self, beta):
         """
@@ -115,7 +111,7 @@ class ODEData(Dataset):
 
     def get_test_points(self, beta):
         """
-        For this simple ODE experiment, the test points are the same as the interior points.
+        For this simple PDE experiment, the test points are the same as the interior points.
         
         Returns:
             x, t, beta tensor.
