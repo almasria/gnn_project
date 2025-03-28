@@ -77,8 +77,26 @@ class PDEData(Dataset):
         """
  
         return torch.sin(x - beta * t)
-
-    def get_interior_points(self, beta):
+    
+    def _make_time_sequence(self, src, num_step=5, step=1e-4):
+        """
+        Create a sequence of time steps for the given spatial input.
+        
+        Args:
+            src (torch.Tensor): The spatial input tensor.
+            num_step (int): Number of time steps to create.
+            step (float): Time increment for each step.
+            
+        Returns:
+            torch.Tensor: The modified tensor with time steps added.
+        """
+        dim = num_step
+        src = src.unsqueeze(1).repeat(1, dim, 1)  # (N, L, 2)
+        for i in range(num_step):
+            src[:, i, -1] += step * i
+        return src
+    
+    def get_interior_points(self, beta, transformer = False, num_step=5, step=1e-4):
         """
         Retrieve the interior (residual) points for a given beta.
         
@@ -87,11 +105,20 @@ class PDEData(Dataset):
             t (torch.Tensor): Temporal component.
             beta_tensor (torch.Tensor): Tensor filled with the beta value.
         """
-        res = self.data[beta]['res']
-        x = res[:, 0:1]
-        t = res[:, 1:2]
-        beta_tensor = torch.full_like(x, beta)
-        return x, t, beta_tensor
+        # If transformer is True, we need to create a sequence of time steps.
+        if transformer:
+            res = self._make_time_sequence(self.data[beta]['res'], num_step=num_step, step=step)
+            x = res[:, :, 0:1]
+            t = res[:, :, 1:2]
+            beta_tensor = torch.full_like(x, beta)
+            return x, t, beta_tensor
+        # If transformer is False, we simply return the residual points.
+        else: 
+            res = self.data[beta]['res']
+            x = res[:, 0:1]
+            t = res[:, 1:2]
+            beta_tensor = torch.full_like(x, beta)
+            return x, t, beta_tensor
 
     def get_initial_condition(self, beta):
         """
@@ -108,15 +135,17 @@ class PDEData(Dataset):
         beta_tensor = torch.full_like(x_ic, beta)
         u_ic = self.data[beta]['u_ic']
         return x_ic, t_ic, beta_tensor, u_ic
+    
 
-    def get_test_points(self, beta):
+    def get_test_points(self, beta, transformer = False, num_step=5, step=1e-4):
         """
         For this simple PDE experiment, the test points are the same as the interior points.
         
         Returns:
             x, t, beta tensor.
         """
-        return self.get_interior_points(beta) 
+        
+        return self.get_interior_points(beta, transformer = transformer, num_step=num_step, step=step) 
     
     def get_interior_input_without_points(self):
 
