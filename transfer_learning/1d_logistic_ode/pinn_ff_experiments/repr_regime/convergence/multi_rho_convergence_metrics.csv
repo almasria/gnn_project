@@ -1,0 +1,13 @@
+Rho,Model,Final RL1 Error,Final RL2 Error,Iterations to Converge,Speedup Factor,Improvement %
+0.5,Baseline (From Scratch),0.018838923,0.021095002,8,,
+0.5,Fine-tuned,0.0010458858,0.0012079563,2,4.0,75.0
+1.0,Baseline (From Scratch),0.08718944,0.10597924,1,,
+1.0,Fine-tuned,0.05072508,0.052859396,1,1.0,0.0
+3.0,Baseline (From Scratch),2.452454,2.116187,Did not converge,,
+3.0,Fine-tuned,0.99687964,0.99645483,Did not converge,N/A,N/A
+4.0,Baseline (From Scratch),0.99682033,0.99936086,Did not converge,,
+4.0,Fine-tuned,0.991355,0.9931777,Did not converge,N/A,N/A
+5.0,Baseline (From Scratch),0.9977008,0.99939394,Did not converge,,
+5.0,Fine-tuned,0.9964658,0.9971333,Did not converge,N/A,N/A
+6.0,Baseline (From Scratch),1.2640661,1.1016697,Did not converge,,
+6.0,Fine-tuned,0.99751973,0.99784106,Did not converge,N/A,N/A
