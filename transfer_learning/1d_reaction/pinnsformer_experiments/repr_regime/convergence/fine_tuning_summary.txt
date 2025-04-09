@@ -1,0 +1,46 @@
+=== Summary of Findings ===
+
+Rho = 0.5:
+  - From scratch final RL2: 0.432192
+  - Fine-tuned final RL2: 0.433422
+  - Error reduction: -0.28%
+  - Fine-tuned model already met threshold - immediate convergence!
+  - Baseline model converged in 0 iterations.
+
+Rho = 1.0:
+  - From scratch final RL2: 0.507178
+  - Fine-tuned final RL2: 0.500840
+  - Error reduction: 1.25%
+  - Fine-tuned model already met threshold - immediate convergence!
+  - Baseline model converged in 0 iterations.
+
+Rho = 3.0:
+  - From scratch final RL2: 0.352491
+  - Fine-tuned final RL2: 0.411436
+  - Error reduction: -16.72%
+  - Fine-tuned model already met threshold - immediate convergence!
+  - Baseline model converged in 0 iterations.
+
+Rho = 4.0:
+  - From scratch final RL2: 0.322764
+  - Fine-tuned final RL2: 0.391290
+  - Error reduction: -21.23%
+  - Fine-tuned model already met threshold - immediate convergence!
+  - Baseline model converged in 0 iterations.
+
+Rho = 5.0:
+  - From scratch final RL2: 0.415446
+  - Fine-tuned final RL2: 0.387028
+  - Error reduction: 6.84%
+  - Fine-tuned model already met threshold - immediate convergence!
+  - Baseline model converged in 4 iterations.
+
+Rho = 6.0:
+  - From scratch final RL2: 0.489833
+  - Fine-tuned final RL2: 0.456174
+  - Error reduction: 6.87%
+  - Fine-tuned model already met threshold - immediate convergence!
+  - Baseline model converged in 6 iterations.
+
+
+Summary generated on: 2025-03-30 21:59:50
