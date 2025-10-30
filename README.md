@@ -13,17 +13,17 @@ This repository is a **fork of the original PINNsFormer repository** and contain
 The work was conducted as part of the *Generative Neural Networks for the Sciences* course at Heidelberg University (Prof. Ulrich Köthe).
 
 The project explores how the **pretrain–finetune paradigm**, which revolutionized NLP and vision, can be applied to **Physics-Informed Neural Networks (PINNs)**.  
-Specifically, we test whether **PINNsFormers**—Transformer-based PINNs—can **learn reusable “physics priors”** for parameterized differential equations.
+Specifically, we test whether **PINNsFormers**—Transformer-based PINNs—can **learn reusable "physics priors"** for parameterized differential equations.
 
 ---
 
 ## Overview
 
-> “We wanted to see if transfer learning could turn PINNs into foundation models for PDEs.”
+> "We wanted to see if transfer learning could turn PINNs into foundation models for PDEs."
 
 **PINNsFormer** (Zhao et al., 2024) extends PINNs by adding a Transformer encoder–decoder with attention across pseudo-time sequences.  
 In this project, we:
-- Added **parameter conditioning** (e.g., reaction coefficient ?) to both PINN and PINNsFormer.
+- Added **parameter conditioning** (e.g., reaction coefficient rho) to both PINN and PINNsFormer.
 - Implemented **pretraining ? finetuning** workflows.
 - Benchmarked **transfer learning**, **generalization**, and **convergence speed** vs. standard feed-forward PINNs.
 
@@ -32,17 +32,18 @@ In this project, we:
 ## Code Structure
 
 ```
-??? model_parametrized/
-?   ??? Modified model implementations with parameter conditioning (x, t, ?)
-?
-??? transfer_learning/
-?   ??? 1d_logistic_ode/      # All PINN & PINNsFormer experiments on low & representative regimes
-?   ??? 1d_reaction/           # Transfer learning on 1D reaction PDE
-?   ??? convection/            # Early PDE experiments
-?   ??? demo_training_loops/   # Prototype notebooks and exploratory training scripts
-?
-??? original_code/             # Provided implementation from the original PINNsFormer paper
-??? final_project_report.pdf   # Full report with detailed results and methodology
+.
+|-- model_parametrized/
+|   |-- Modified model implementations with parameter conditioning (x, t, rho)
+|
+|-- transfer_learning/
+|   |-- 1d_logistic_ode/      # All PINN & PINNsFormer experiments on low & representative regimes
+|   |-- 1d_reaction/           # Transfer learning on 1D reaction PDE
+|   |-- convection/            # Early PDE experiments
+|   |-- demo_training_loops/   # Prototype notebooks and exploratory training scripts
+|
+|-- original_code/             # Provided implementation from the original PINNsFormer paper
+|-- final_project_report.pdf   # Full report with detailed results and methodology
 ```
 
 ---
@@ -51,13 +52,13 @@ In this project, we:
 
 | Model | Input | Key Additions | Training |
 |:------|:-------|:---------------|:----------|
-| **Feedforward PINN (baseline)** | (x, t, ?) | Adaptive loss weighting, residual normalization | Adam (mini-batch) |
-| **PINNsFormer** | (x, t, ?) | Pseudo-sequence generator, Wavelet activation, self-attention | Adam / L-BFGS hybrid |
+| **Feedforward PINN (baseline)** | (x, t, rho) | Adaptive loss weighting, residual normalization | Adam (mini-batch) |
+| **PINNsFormer** | (x, t, rho) | Pseudo-sequence generator, Wavelet activation, self-attention | Adam / L-BFGS hybrid |
 
 **Tasks Evaluated**
 - 1D Logistic ODE  
 - 1D Reaction PDE  
-- Parameter regimes: low ? ? [0.5, 1.0] and representative ? ? [0.5, 4.0]
+- Parameter regimes: low rho in [0.5, 1.0] and representative rho in [0.5, 4.0]
 
 ---
 
@@ -65,9 +66,9 @@ In this project, we:
 
 | Experiment | Metric | Finding |
 |:------------|:--------|:---------|
-| **Parameter Generalization** | Pearson r(L? error ? ?) | PINN = +0.94 ? poor transfer<br>PINNsFormer = –0.42 ? improved robustness |
-| **Convergence Speed (Transfer Learning)** | Fine-tuned vs from-scratch | Up to 5× faster convergence and 92 % lower error (? = 5.0) |
-| **Extrapolation** | Accuracy outside training range | PINNsFormer stable ? PINN diverged |
+| **Parameter Generalization** | Pearson r(L2 error vs rho) | PINN = +0.94 (poor transfer)<br>PINNsFormer = -0.42 (improved robustness) |
+| **Convergence Speed (Transfer Learning)** | Fine-tuned vs from-scratch | Up to 5x faster convergence and 92% lower error (rho = 5.0) |
+| **Extrapolation** | Accuracy outside training range | PINNsFormer stable, PINN diverged |
 | **Overall** | — | Transformer architecture captures broader PDE regimes and supports reusable physics priors |
 
 ---
